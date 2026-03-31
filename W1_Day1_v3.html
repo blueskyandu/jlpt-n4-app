@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>JLPT N4 STEP UP MASTER | W1 Day 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf8f4;
+    --card: #ffffff;
+    --navy: #1e2248;
+    --accent: #d4541a;
+    --green: #2d7a5a;
+    --red: #be2a1e;
+    --muted: #7a7e96;
+    --border: #e8e4dc;
+    --pill-bg: #f0ede6;
+    --jlpt: #6b3fa0;
+    --progress-track: #e8e4dc;
+    --progress-fill: #d4541a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .app {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--navy);
+    color: #fff;
+    padding: 16px 20px 14px;
+  }
+  .header-top {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    opacity: 0.6;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .header-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .header-sub {
+    font-size: 11px;
+    opacity: 0.55;
+    margin-top: 3px;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-wrap {
+    background: var(--card);
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .progress-bar-track {
+    flex: 1;
+    height: 4px;
+    background: var(--progress-track);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--progress-fill);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .timer {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    white-space: nowrap;
+    min-width: 38px;
+    text-align: right;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; flex: 1; flex-direction: column; }
+  .screen.active { display: flex; }
+
+  /* ── START SCREEN ── */
+  .start-screen {
+    padding: 28px 24px 32px;
+    gap: 20px;
+  }
+  .day-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--pill-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    align-self: flex-start;
+  }
+  .day-badge strong { color: var(--navy); }
+  .start-heading {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--navy);
+  }
+  .theme-tag {
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+  }
+  .flow-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .flow-card-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .flow-steps { display: flex; flex-direction: column; gap: 10px; }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .flow-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .flow-text { font-size: 13px; line-height: 1.5; }
+  .flow-time { font-size: 11px; color: var(--muted); }
+  .meta-row {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .meta-row span { display: flex; align-items: center; gap: 4px; }
+  .start-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: background 0.15s, transform 0.1s;
+    margin-top: 4px;
+  }
+  .start-btn:active { transform: scale(0.98); background: #b8451a; }
+
+  /* ── QUIZ SCREEN ── */
+  .quiz-screen { padding: 0; }
+  .question-area {
+    flex: 1;
+    padding: 20px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .section-pill {
+    background: var(--pill-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .jlpt-badge {
+    background: var(--jlpt);
+    color: #fff;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  .q-num {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .question-text {
+    font-size: 17px;
+    line-height: 1.7;
+    font-weight: 400;
+    min-height: 60px;
+  }
+  .question-text u { text-decoration: underline; }
+  .hint-box {
+    background: #fffbf0;
+    border: 1px solid #f0d87a;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #7a6020;
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  /* ── CHOICES ── */
+  .choices { display: flex; flex-direction: column; gap: 10px; padding: 0 20px 20px; }
+  .choice-btn {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    text-align: left;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: border-color 0.15s, background 0.15s;
+    line-height: 1.5;
+  }
+  .choice-btn:not(.disabled):active { background: #f5f2ec; }
+  .choice-label {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .choice-btn.correct {
+    background: #edf7f2;
+    border-color: var(--green);
+  }
+  .choice-btn.correct .choice-label {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+  .choice-btn.wrong {
+    background: #fdf0ef;
+    border-color: var(--red);
+  }
+  .choice-btn.wrong .choice-label {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+  }
+  .choice-btn.disabled { cursor: default; }
+
+  /* ── EXPLANATION ── */
+  .explanation {
+    margin: 0 20px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .exp-header {
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .exp-header.correct-header { background: #edf7f2; color: var(--green); }
+  .exp-header.wrong-header { background: #fdf0ef; color: var(--red); }
+  .exp-body { padding: 12px 16px; font-size: 13px; line-height: 1.7; }
+  .exp-point {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: var(--pill-bg);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--navy);
+  }
+  .next-btn {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 0 16px 20px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: background 0.15s;
+  }
+  .next-btn:active { background: #2d3165; }
+
+  /* ── RESULT SCREEN ── */
+  .result-screen { padding: 24px 20px 32px; gap: 20px; }
+  .result-heading {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    text-align: center;
+  }
+  .score-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    margin: 8px 0;
+  }
+  .score-num { font-size: 30px; font-weight: 700; color: var(--accent); line-height: 1; }
+  .score-denom { font-size: 12px; color: var(--muted); }
+  .section-scores {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .section-score-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .section-score-row:last-child { border-bottom: none; }
+  .section-name { font-size: 13px; flex: 1; }
+  .section-frac { font-size: 13px; font-weight: 500; color: var(--accent); }
+  .output-card {
+    background: #fffcf5;
+    border: 1px solid #f0d87a;
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .output-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #7a6020;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .output-prompt {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+  .output-example { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .output-textarea {
+    width: 100%;
+    margin-top: 12px;
+    border: 1.5px solid #e0d090;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    background: #fff;
+    resize: none;
+    min-height: 70px;
+    color: var(--navy);
+  }
+  .output-textarea:focus { outline: none; border-color: #c4a830; }
+  .restart-btn {
+    background: var(--pill-bg);
+    color: var(--navy);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+  }
+  .time-display {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: -8px;
+  }
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    margin-top: 10px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 11px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .copy-btn:active { background: #2d3165; }
+  .copy-btn.copied { background: var(--green); }
+  .answer-review {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    overflow-x: auto;
+  }
+  .answer-review-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .ar-table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  .ar-table td { border: 1px solid var(--border); padding: 6px 8px; text-align: center; white-space: nowrap; }
+  .ar-table td:first-child { text-align: left; color: var(--muted); font-size: 11px; background: #faf8f4; min-width: 76px; }
+  .ar-ok { color: var(--green); font-weight: 700; }
+  .ar-ng { color: var(--red); font-weight: 700; }
+  .close-btn {
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: center;
+  }
+  .done-screen {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px 24px;
+    text-align: center;
+  }
+  .done-screen.active { display: flex; }
+  .done-icon { font-size: 56px; line-height: 1; }
+  .done-title { font-family: 'Noto Serif JP', serif; font-size: 20px; color: var(--navy); }
+  .done-sub { font-size: 13px; color: var(--muted); line-height: 1.7; }
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">JLPT N4 STEP UP MASTER</div>
+    <div class="header-title">Week 1 · Day 1　漢字＋語彙（基礎）</div>
+    <div class="header-sub">テーマ：毎日の生活と習慣</div>
+  </div>
+
+  <!-- PROGRESS BAR (hidden on start) -->
+  <div class="progress-wrap" id="progressWrap" style="display:none">
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">1 / 9</div>
+    <div class="timer" id="timerDisplay">0:00</div>
+  </div>
+
+  <!-- START SCREEN -->
+  <div class="screen start-screen active" id="startScreen">
+    <div class="day-badge"><strong>Day 1</strong> 漢字 · 語彙</div>
+    <div class="start-heading">毎日の生活と<br>習慣を学ぼう</div>
+    <div class="theme-tag">🗓 Week 1 ／ 基礎理解</div>
+
+    <div class="flow-card">
+      <div class="flow-card-title">📋 今日の学習フロー</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-text">演習（クイズ 9問）<div class="flow-time">約6分</div></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-text">解説確認（各問直後に表示）<div class="flow-time">約2分</div></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-text">アウトプットメモ（1文）<div class="flow-time">約2分</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="meta-row">
+      <span>📝 漢字3問 ／ 語彙5問 ／ 復習1問</span>
+      <span>⏱ 約10分</span>
+    </div>
+
+    <button class="start-btn" onclick="startQuiz()">スタート →</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div class="screen quiz-screen" id="quizScreen">
+    <div class="question-area" id="questionArea"></div>
+    <div class="choices" id="choicesArea"></div>
+    <div class="explanation" id="explanation">
+      <div class="exp-header" id="expHeader"></div>
+      <div class="exp-body" id="expBody"></div>
+    </div>
+    <button class="next-btn" id="nextBtn" style="display:none" onclick="nextQuestion()">次の問題 →</button>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div class="screen result-screen" id="resultScreen">
+    <div class="result-heading">お疲れさまでした！</div>
+    <div class="score-circle">
+      <div class="score-num" id="scoreNum">—</div>
+      <div class="score-denom" id="scoreDenom">/ 9問</div>
+    </div>
+    <div class="time-display" id="timeDisplay"></div>
+    <div class="section-scores" id="sectionScores"></div>
+    <div class="output-card">
+      <div class="output-title">💬 アウトプットメモ</div>
+      <div class="output-prompt">「私は毎朝、＿＿＿＿＿。」</div>
+      <div class="output-example">例：シャワーを浴びてから朝ごはんを食べます。</div>
+      <textarea class="output-textarea" id="outputMemo" placeholder="今日の語彙を使って書いてみよう。オンラインレッスンで話しましょう！"></textarea>
+    </div>
+    <div class="answer-review" id="answerReview"></div>
+    <button class="copy-btn" id="copyBtn" onclick="copyMemo()">📋 メモ＋解答をコピーする</button>
+    <button class="restart-btn" onclick="restart()">↩ もう一度</button>
+    <button class="close-btn" onclick="closeApp()">✕ 終了する</button>
+  </div>
+
+  <!-- DONE SCREEN -->
+  <div class="done-screen" id="doneScreen">
+    <div class="done-icon">🎉</div>
+    <div class="done-title">今日の学習、完了！</div>
+    <div class="done-sub">コピーしたメモを先生に送りましょう。<br>次回のレッスンで話しましょう！</div>
+  </div>
+
+</div>
+
+<script>
+const quizData = {
+  questions: [
+    {
+      id: 1, section: "漢字", jlpt: false,
+      text: "毎朝、早く<u>起き</u>ます。\n下線部の読み方はどれですか。",
+      hint: null,
+      choices: ["おき", "ねき", "うき", "たち"],
+      answer: 0,
+      explanation: "「起きる（おきる）」は眠りから覚めること。反対語は「寝る（ねる）」。",
+      point: "起きる ↔ 寝る（ねる）"
+    },
+    {
+      id: 2, section: "漢字", jlpt: false,
+      text: "夜、<u>歯</u>を磨いてから寝ます。\n下線部の読み方はどれですか。",
+      hint: null,
+      choices: ["め", "て", "は", "ひ"],
+      answer: 2,
+      explanation: "「歯（は）」は口の中にある白いもの。「歯を磨く（はをみがく）」は毎晩の習慣。",
+      point: "歯（は）・歯ブラシ・歯磨き粉（はみがきこ）"
+    },
+    {
+      id: 3, section: "漢字", jlpt: true,
+      text: "毎日、<u>日記</u>をつけています。\n下線部の読み方はどれですか。",
+      hint: null,
+      choices: ["にちき", "にきき", "にっぎ", "にっき"],
+      answer: 3,
+      explanation: "「日記（にっき）」は促音（っ）に注意。「日（にち）→にっ」になるパターンは頻出。",
+      point: "日記（にっき）・日本（にほん）・日曜日（にちようび）"
+    },
+    {
+      id: 4, section: "語彙", jlpt: false,
+      text: "毎朝シャワーを（　）から、朝ごはんを食べます。",
+      hint: "💡 シャワーと一緒に使う動詞はどれ？",
+      choices: ["飲んで（のんで）", "着て（きて）", "浴びて（あびて）", "入れて（いれて）"],
+      answer: 2,
+      explanation: "「シャワーを浴びる（あびる）」が自然な表現。「お風呂に入る」も一緒に覚えよう。",
+      point: "シャワーを浴びる ／ お風呂に入る（おふろにはいる）"
+    },
+    {
+      id: 5, section: "語彙", jlpt: false,
+      text: "毎晩、寝る前に歯を（　）習慣があります。",
+      hint: "💡 「歯（は）」と一緒に使う動詞はどれ？",
+      choices: ["切る（きる）", "磨く（みがく）", "食べる", "洗う（あらう）"],
+      answer: 1,
+      explanation: "「歯を磨く（はをみがく）」は固定表現として覚えましょう。",
+      point: "歯を磨く ／ 技術を磨く（ぎじゅつをみがく）"
+    },
+    {
+      id: 6, section: "語彙", jlpt: true,
+      text: "いつも電車で通勤していますが、今朝は（　）で来ました。",
+      hint: "💡 通勤に使う交通手段を選んでください。",
+      choices: ["映画（えいが）", "レポート", "天気（てんき）", "自転車（じてんしゃ）"],
+      answer: 3,
+      explanation: "「自転車（じてんしゃ）」は乗り物の語彙。通勤手段として「電車・バス・自転車・徒歩」は頻出。",
+      point: "電車で ／ バスで ／ 自転車で ／ 徒歩で（とほで）"
+    },
+    {
+      id: 7, section: "語彙", jlpt: false,
+      text: "毎朝、目が（　）たら、まずスマホを見ます。",
+      hint: "💡 眠りから覚める、という意味の表現はどれ？",
+      choices: ["覚め（さめ）", "つき", "消え（きえ）", "起き（おき）"],
+      answer: 0,
+      explanation: "「目が覚める（めがさめる）」は「眠りから意識が戻る」こと。自然な会話で使えます。",
+      point: "目が覚める ／ 眠れない（ねむれない）"
+    },
+    {
+      id: 8, section: "語彙", jlpt: false,
+      text: "家を出る前に（　）をかけることを忘れないでください。",
+      hint: "💡 安全のために家を出るときすること。",
+      choices: ["電気（でんき）", "鍵（かぎ）", "水（みず）", "窓（まど）"],
+      answer: 1,
+      explanation: "「鍵をかける（かぎをかける）」は lock すること。「鍵を開ける・鍵を忘れる」も一緒に。",
+      point: "鍵をかける ／ 鍵を開ける（かぎをあける）"
+    },
+    {
+      id: 9, section: "スパイラル復習", jlpt: false,
+      text: "（基礎確認）「毎日」の正しい読み方はどれですか。",
+      hint: "💡「毎〜」のパターンを思い出してみましょう。",
+      choices: ["まいび", "まいじつ", "まいにち", "まいにい"],
+      answer: 2,
+      explanation: "「毎日（まいにち）」は基本中の基本。「毎朝・毎晩・毎週・毎月・毎年」も確認しよう。",
+      point: "毎日・毎朝（まいあさ）・毎晩（まいばん）・毎週（まいしゅう）"
+    }
+  ]
+};
+
+// ── State ──
+let current = 0;
+let score = 0;
+let answered = false;
+let timerInterval = null;
+let elapsed = 0;
+let sectionScores = {};
+let totalBySection = {};
+let userAnswers = [];
+
+const labels = ["①", "②", "③", "④"];
+
+function startQuiz() {
+  current = 0; score = 0; answered = false; elapsed = 0;
+  sectionScores = {}; totalBySection = {}; userAnswers = [];
+  quizData.questions.forEach(q => {
+    if (!sectionScores[q.section]) { sectionScores[q.section] = 0; totalBySection[q.section] = 0; }
+    totalBySection[q.section]++;
+  });
+  document.getElementById('startScreen').classList.remove('active');
+  document.getElementById('quizScreen').classList.add('active');
+  document.getElementById('progressWrap').style.display = 'flex';
+  startTimer();
+  renderQuestion();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    elapsed++;
+    const m = Math.floor(elapsed / 60);
+    const s = elapsed % 60;
+    document.getElementById('timerDisplay').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  }, 1000);
+}
+
+function renderQuestion() {
+  const q = quizData.questions[current];
+  answered = false;
+
+  // Progress
+  const pct = (current / quizData.questions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${current + 1} / ${quizData.questions.length}`;
+
+  // Question meta
+  const jlptBadge = q.jlpt ? `<span class="jlpt-badge">★ JLPT形式</span>` : '';
+  const qArea = document.getElementById('questionArea');
+  qArea.innerHTML = `
+    <div class="q-meta">
+      <span class="section-pill">${q.section}</span>
+      ${jlptBadge}
+      <span class="q-num">問${q.id}</span>
+    </div>
+    <div class="question-text">${q.text.replace(/\n/g,'<br>')}</div>
+    ${q.hint ? `<div class="hint-box">${q.hint}</div>` : ''}
+  `;
+
+  // Choices
+  const choicesArea = document.getElementById('choicesArea');
+  choicesArea.innerHTML = q.choices.map((c, i) => `
+    <button class="choice-btn" id="choice-${i}" onclick="selectAnswer(${i})">
+      <span class="choice-label">${labels[i]}</span>
+      <span>${c}</span>
+    </button>
+  `).join('');
+
+  // Hide explanation & next
+  document.getElementById('explanation').className = 'explanation';
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+
+  const q = quizData.questions[current];
+  const correct = idx === q.answer;
+  userAnswers[current] = { chosen: idx, correct };
+
+  if (correct) {
+    score++;
+    sectionScores[q.section]++;
+  }
+
+  // Style choices
+  q.choices.forEach((_, i) => {
+    const btn = document.getElementById(`choice-${i}`);
+    btn.classList.add('disabled');
+    if (i === q.answer) btn.classList.add('correct');
+    else if (i === idx && !correct) btn.classList.add('wrong');
+  });
+
+  // Explanation
+  const expEl = document.getElementById('explanation');
+  const expHeader = document.getElementById('expHeader');
+  const expBody = document.getElementById('expBody');
+
+  expHeader.className = `exp-header ${correct ? 'correct-header' : 'wrong-header'}`;
+  expHeader.innerHTML = correct ? '✓ 正解！' : `✗ 不正解　正解は ${labels[q.answer]}`;
+  expBody.innerHTML = `${q.explanation}<div class="exp-point">📌 ${q.point}</div>`;
+  expEl.classList.add('show');
+
+  document.getElementById('nextBtn').style.display = 'block';
+  document.getElementById('nextBtn').textContent =
+    current < quizData.questions.length - 1 ? '次の問題 →' : '結果を見る →';
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= quizData.questions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  document.getElementById('quizScreen').classList.remove('active');
+  document.getElementById('resultScreen').classList.add('active');
+  document.getElementById('progressWrap').style.display = 'none';
+
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreDenom').textContent = `/ ${quizData.questions.length}問`;
+
+  const m = Math.floor(elapsed / 60);
+  const s = elapsed % 60;
+  document.getElementById('timeDisplay').textContent = `⏱ 学習時間：${m}分${s}秒`;
+
+  const secEl = document.getElementById('sectionScores');
+  secEl.innerHTML = Object.entries(sectionScores).map(([name, sc]) =>
+    `<div class="section-score-row">
+      <div class="section-name">${name}</div>
+      <div class="section-frac">${sc} / ${totalBySection[name]}</div>
+    </div>`
+  ).join('');
+
+  // Answer review
+  const nums   = quizData.questions.map(q => `<td>問${q.id}</td>`).join('');
+  const chosen = userAnswers.map(a => `<td>${labels[a.chosen]}</td>`).join('');
+  const marks  = userAnswers.map(a => `<td class="${a.correct ? 'ar-ok' : 'ar-ng'}">${a.correct ? '○' : '✕'}</td>`).join('');
+
+  document.getElementById('answerReview').innerHTML = `
+    <div class="answer-review-title">📄 解答記録</div>
+    <table class="ar-table">
+      <tr><td>問題番号</td>${nums}</tr>
+      <tr><td>あなたの答え</td>${chosen}</tr>
+      <tr><td>正誤</td>${marks}</tr>
+    </table>
+  `;
+}
+
+function copyMemo() {
+  const memo = document.getElementById('outputMemo').value.trim() || '（未記入）';
+  const lines = quizData.questions.map((q, i) => {
+    const a = userAnswers[i];
+    return `問${q.id}：${labels[a.chosen]}　${a.correct ? '○' : '✕'}`;
+  }).join('\n');
+
+  const copyText =
+`【W1 Day1 アウトプットメモ】
+${memo}
+
+【解答記録】
+${lines}`;
+
+  const btn = document.getElementById('copyBtn');
+
+  function onSuccess() {
+    btn.textContent = '✓ コピーしました';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = '📋 メモ＋解答をコピーする';
+      btn.classList.remove('copied');
+    }, 2000);
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(copyText).then(onSuccess).catch(() => fallbackCopy(copyText, onSuccess));
+  } else {
+    fallbackCopy(copyText, onSuccess);
+  }
+}
+
+function fallbackCopy(text, callback) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.top = '0';
+  ta.style.left = '0';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    callback();
+  } catch(e) {
+    alert('コピーできませんでした。テキストを長押しして手動でコピーしてください。');
+  }
+  document.body.removeChild(ta);
+}
+
+function restart() {
+  document.getElementById('resultScreen').classList.remove('active');
+  document.getElementById('startScreen').classList.add('active');
+}
+
+function closeApp() {
+  document.getElementById('resultScreen').classList.remove('active');
+  document.getElementById('doneScreen').classList.add('active');
+}
+</script>
+</body>
+</html>

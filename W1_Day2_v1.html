@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>JLPT N4 STEP UP MASTER | W1 Day 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf8f4;
+    --card: #ffffff;
+    --navy: #1e2248;
+    --accent: #d4541a;
+    --green: #2d7a5a;
+    --red: #be2a1e;
+    --muted: #7a7e96;
+    --border: #e8e4dc;
+    --pill-bg: #f0ede6;
+    --jlpt: #6b3fa0;
+    --progress-track: #e8e4dc;
+    --progress-fill: #d4541a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .app { width: 100%; max-width: 480px; min-height: 100vh; display: flex; flex-direction: column; }
+  .header { background: var(--navy); color: #fff; padding: 16px 20px 14px; }
+  .header-top { font-size: 10px; letter-spacing: 0.12em; opacity: 0.6; text-transform: uppercase; margin-bottom: 4px; }
+  .header-title { font-family: 'Noto Serif JP', serif; font-size: 15px; font-weight: 600; letter-spacing: 0.04em; }
+  .header-sub { font-size: 11px; opacity: 0.55; margin-top: 3px; }
+  .progress-wrap { background: var(--card); padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .progress-bar-track { flex: 1; height: 4px; background: var(--progress-track); border-radius: 2px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--progress-fill); border-radius: 2px; transition: width 0.4s ease; }
+  .progress-label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .timer { font-size: 12px; font-weight: 500; color: var(--muted); white-space: nowrap; min-width: 38px; text-align: right; }
+  .screen { display: none; flex: 1; flex-direction: column; }
+  .screen.active { display: flex; }
+  .start-screen { padding: 28px 24px 32px; gap: 20px; }
+  .day-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--pill-bg); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 12px; color: var(--muted); align-self: flex-start; }
+  .day-badge strong { color: var(--navy); }
+  .start-heading { font-family: 'Noto Serif JP', serif; font-size: 22px; line-height: 1.5; color: var(--navy); }
+  .theme-tag { font-size: 12px; color: var(--accent); font-weight: 500; letter-spacing: 0.03em; }
+  .flow-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .flow-card-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 14px; }
+  .flow-steps { display: flex; flex-direction: column; gap: 10px; }
+  .flow-step { display: flex; align-items: flex-start; gap: 12px; }
+  .flow-num { width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .flow-text { font-size: 13px; line-height: 1.5; }
+  .flow-time { font-size: 11px; color: var(--muted); }
+  .meta-row { display: flex; gap: 16px; font-size: 12px; color: var(--muted); }
+  .start-btn { background: var(--accent); color: #fff; border: none; border-radius: 12px; padding: 16px; font-family: 'Noto Sans JP', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: 0.05em; transition: background 0.15s, transform 0.1s; margin-top: 4px; }
+  .start-btn:active { transform: scale(0.98); background: #b8451a; }
+  .quiz-screen { padding: 0; }
+  .question-area { flex: 1; padding: 20px 20px 16px; display: flex; flex-direction: column; gap: 16px; }
+  .q-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .section-pill { background: var(--pill-bg); border: 1px solid var(--border); border-radius: 20px; padding: 3px 10px; font-size: 11px; color: var(--muted); }
+  .jlpt-badge { background: var(--jlpt); color: #fff; border-radius: 4px; padding: 2px 7px; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; }
+  .q-num { margin-left: auto; font-size: 12px; color: var(--muted); }
+  .question-text { font-size: 17px; line-height: 1.7; font-weight: 400; min-height: 60px; }
+  .hint-box { background: #fffbf0; border: 1px solid #f0d87a; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #7a6020; }
+  .choices { display: flex; flex-direction: column; gap: 10px; padding: 0 20px 20px; }
+  .choice-btn { background: var(--card); border: 1.5px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: left; font-family: 'Noto Sans JP', sans-serif; font-size: 15px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: border-color 0.15s, background 0.15s; line-height: 1.5; }
+  .choice-btn:not(.disabled):active { background: #f5f2ec; }
+  .choice-label { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; color: var(--muted); transition: all 0.15s; }
+  .choice-btn.correct { background: #edf7f2; border-color: var(--green); }
+  .choice-btn.correct .choice-label { background: var(--green); border-color: var(--green); color: #fff; }
+  .choice-btn.wrong { background: #fdf0ef; border-color: var(--red); }
+  .choice-btn.wrong .choice-label { background: var(--red); border-color: var(--red); color: #fff; }
+  .choice-btn.disabled { cursor: default; }
+  .explanation { margin: 0 20px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; display: none; }
+  .explanation.show { display: block; }
+  .exp-header { padding: 10px 16px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; display: flex; align-items: center; gap: 6px; }
+  .exp-header.correct-header { background: #edf7f2; color: var(--green); }
+  .exp-header.wrong-header { background: #fdf0ef; color: var(--red); }
+  .exp-body { padding: 12px 16px; font-size: 13px; line-height: 1.7; }
+  .exp-point { margin-top: 10px; padding: 8px 12px; background: var(--pill-bg); border-radius: 6px; font-size: 12px; color: var(--navy); }
+  .next-btn { display: block; width: calc(100% - 32px); margin: 0 16px 20px; background: var(--navy); color: #fff; border: none; border-radius: 10px; padding: 14px; font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 0.06em; transition: background 0.15s; }
+  .next-btn:active { background: #2d3165; }
+  .result-screen { padding: 24px 20px 32px; gap: 20px; }
+  .result-heading { font-family: 'Noto Serif JP', serif; font-size: 20px; text-align: center; }
+  .score-circle { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--accent); display: flex; flex-direction: column; align-items: center; justify-content: center; align-self: center; margin: 8px 0; }
+  .score-num { font-size: 30px; font-weight: 700; color: var(--accent); line-height: 1; }
+  .score-denom { font-size: 12px; color: var(--muted); }
+  .section-scores { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .section-score-row { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); gap: 12px; }
+  .section-score-row:last-child { border-bottom: none; }
+  .section-name { font-size: 13px; flex: 1; }
+  .section-frac { font-size: 13px; font-weight: 500; color: var(--accent); }
+  .output-card { background: #fffcf5; border: 1px solid #f0d87a; border-radius: 12px; padding: 18px 20px; }
+  .output-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #7a6020; margin-bottom: 10px; }
+  .output-prompt { font-size: 15px; font-weight: 500; color: var(--navy); margin-bottom: 8px; line-height: 1.6; }
+  .output-example { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .output-textarea { width: 100%; margin-top: 12px; border: 1.5px solid #e0d090; border-radius: 8px; padding: 10px 12px; font-family: 'Noto Sans JP', sans-serif; font-size: 14px; background: #fff; resize: none; min-height: 70px; color: var(--navy); }
+  .output-textarea:focus { outline: none; border-color: #c4a830; }
+  .restart-btn { background: var(--pill-bg); color: var(--navy); border: 1.5px solid var(--border); border-radius: 10px; padding: 13px; font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; text-align: center; }
+  .time-display { text-align: center; font-size: 12px; color: var(--muted); margin-top: -8px; }
+  .copy-btn { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; margin-top: 10px; background: var(--navy); color: #fff; border: none; border-radius: 8px; padding: 11px; font-family: 'Noto Sans JP', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+  .copy-btn:active { background: #2d3165; }
+  .copy-btn.copied { background: var(--green); }
+  .answer-review { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; overflow-x: auto; }
+  .answer-review-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 12px; }
+  .ar-table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  .ar-table td { border: 1px solid var(--border); padding: 6px 8px; text-align: center; white-space: nowrap; }
+  .ar-table td:first-child { text-align: left; color: var(--muted); font-size: 11px; background: #faf8f4; min-width: 76px; }
+  .ar-ok { color: var(--green); font-weight: 700; }
+  .ar-ng { color: var(--red); font-weight: 700; }
+  .close-btn { background: transparent; color: var(--muted); border: 1.5px solid var(--border); border-radius: 10px; padding: 12px; font-family: 'Noto Sans JP', sans-serif; font-size: 13px; cursor: pointer; text-align: center; }
+  .done-screen { display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 40px 24px; text-align: center; }
+  .done-screen.active { display: flex; }
+  .done-icon { font-size: 56px; line-height: 1; }
+  .done-title { font-family: 'Noto Serif JP', serif; font-size: 20px; color: var(--navy); }
+  .done-sub { font-size: 13px; color: var(--muted); line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="header-top">JLPT N4 STEP UP MASTER</div>
+    <div class="header-title">Week 1 · Day 2　漢字＋語彙（運用）</div>
+    <div class="header-sub">テーマ：毎日の生活と習慣</div>
+  </div>
+
+  <div class="progress-wrap" id="progressWrap" style="display:none">
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">1 / 9</div>
+    <div class="timer" id="timerDisplay">0:00</div>
+  </div>
+
+  <!-- START -->
+  <div class="screen start-screen active" id="startScreen">
+    <div class="day-badge"><strong>Day 2</strong> 漢字 · 語彙（運用）</div>
+    <div class="start-heading">用法・言い換え・<br>対義語を学ぼう</div>
+    <div class="theme-tag">🗓 Week 1 ／ 基礎理解</div>
+
+    <div class="flow-card">
+      <div class="flow-card-title">📋 今日の学習フロー</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-text">演習（クイズ 9問）<div class="flow-time">約6分</div></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-text">解説確認（各問直後に表示）<div class="flow-time">約2分</div></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-text">アウトプットメモ（1文）<div class="flow-time">約2分</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="meta-row">
+      <span>📝 漢字3問 ／ 語彙5問 ／ 復習1問</span>
+      <span>⏱ 約10分</span>
+    </div>
+
+    <button class="start-btn" onclick="startQuiz()">スタート →</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen quiz-screen" id="quizScreen">
+    <div class="question-area" id="questionArea"></div>
+    <div class="choices" id="choicesArea"></div>
+    <div class="explanation" id="explanation">
+      <div class="exp-header" id="expHeader"></div>
+      <div class="exp-body" id="expBody"></div>
+    </div>
+    <button class="next-btn" id="nextBtn" style="display:none" onclick="nextQuestion()">次の問題 →</button>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen result-screen" id="resultScreen">
+    <div class="result-heading">お疲れさまでした！</div>
+    <div class="score-circle">
+      <div class="score-num" id="scoreNum">—</div>
+      <div class="score-denom" id="scoreDenom">/ 9問</div>
+    </div>
+    <div class="time-display" id="timeDisplay"></div>
+    <div class="section-scores" id="sectionScores"></div>
+    <div class="output-card">
+      <div class="output-title">💬 アウトプットメモ</div>
+      <div class="output-prompt">「私は毎日、＿＿＿前に＿＿＿。」</div>
+      <div class="output-example">例：寝る前に歯を磨きます。</div>
+      <textarea class="output-textarea" id="outputMemo" placeholder="今日の語彙を使って書いてみよう。オンラインレッスンで話しましょう！"></textarea>
+    </div>
+    <div class="answer-review" id="answerReview"></div>
+    <button class="copy-btn" id="copyBtn" onclick="copyMemo()">📋 メモ＋解答をコピーする</button>
+    <button class="restart-btn" onclick="restart()">↩ もう一度</button>
+    <button class="close-btn" onclick="closeApp()">✕ 終了する</button>
+  </div>
+
+  <!-- DONE SCREEN -->
+  <div class="done-screen" id="doneScreen">
+    <div class="done-icon">🎉</div>
+    <div class="done-title">今日の学習、完了！</div>
+    <div class="done-sub">コピーしたメモを先生に送りましょう。<br>次回のレッスンで話しましょう！</div>
+  </div>
+
+</div>
+<script>
+const quizData = {
+  questions: [
+    {
+      id: 1, section: "漢字", jlpt: false,
+      text: "「起きる（おきる）」の反対の意味を持つ言葉はどれですか。",
+      hint: null,
+      choices: ["寝る（ねる）", "歩く（あるく）", "走る（はしる）", "立つ（たつ）"],
+      answer: 0,
+      explanation: "「起きる」の対義語は「寝る（ねる）」。Day1でも確認した基本ペアです。",
+      point: "起きる ↔ 寝る　／　来る ↔ 帰る"
+    },
+    {
+      id: 2, section: "漢字", jlpt: false,
+      text: "「朝ごはん」の改まった言い方はどれですか。",
+      hint: "💡 フォーマルな場面やメニュー表に使う言葉を選んでください。",
+      choices: ["夕食（ゆうしょく）", "朝食（ちょうしょく）", "昼食（ちゅうしょく）", "夜食（やしょく）"],
+      answer: 1,
+      explanation: "「朝食（ちょうしょく）」は「朝ごはん」のフォーマルな表現。ホテルや書類でよく使います。",
+      point: "朝食（ちょうしょく）・昼食（ちゅうしょく）・夕食（ゆうしょく）"
+    },
+    {
+      id: 3, section: "漢字", jlpt: true,
+      text: "「一週間に一回」のことを「毎（　）」と言います。（　）に入る漢字はどれですか。",
+      hint: "💡「毎〜」の組み合わせを思い出してみましょう。",
+      choices: ["日（にち）", "月（つき）", "年（ねん）", "週（しゅう）"],
+      answer: 3,
+      explanation: "「毎週（まいしゅう）」＝every week。「毎日・毎月・毎年」とセットで覚えましょう。",
+      point: "毎日・毎週（まいしゅう）・毎月（まいつき）・毎年（まいとし）"
+    },
+    {
+      id: 4, section: "語彙", jlpt: false,
+      text: "「顔（かお）」と一緒に使う動詞はどれですか。",
+      hint: "💡 朝起きてすることを思い出してみましょう。",
+      choices: ["磨く（みがく）", "浴びる（あびる）", "洗う（あらう）", "かける"],
+      answer: 2,
+      explanation: "「顔を洗う（かおをあらう）」が正しい組み合わせ。「磨く」は歯、「浴びる」はシャワー。",
+      point: "顔を洗う ／ 歯を磨く ／ シャワーを浴びる"
+    },
+    {
+      id: 5, section: "語彙", jlpt: false,
+      text: "「眠る（ねむる）」と同じ意味の言葉はどれですか。",
+      hint: null,
+      choices: ["寝る（ねる）", "起きる（おきる）", "休む（やすむ）", "疲れる（つかれる）"],
+      answer: 0,
+      explanation: "「眠る」と「寝る」はほぼ同じ意味。「寝る」のほうが日常会話でよく使われます。",
+      point: "眠る＝寝る（日常会話では「寝る」が一般的）"
+    },
+    {
+      id: 6, section: "語彙", jlpt: true,
+      text: "「着る（きる）」を正しく使っているものはどれですか。",
+      hint: "💡「着る」は体のどの部分に使う動詞でしょうか。",
+      choices: ["帽子を着る（ぼうしをきる）", "靴を着る（くつをきる）", "シャツを着る（シャツをきる）", "眼鏡を着る（めがねをきる）"],
+      answer: 2,
+      explanation: "「着る」は服（上半身〜全身）に使う動詞。帽子→かぶる、靴→はく、眼鏡→かける。",
+      point: "着る（服）／ かぶる（帽子）／ はく（靴・ズボン）／ かける（眼鏡）"
+    },
+    {
+      id: 7, section: "語彙", jlpt: false,
+      text: "「早い（はやい）」の反対の言葉はどれですか。",
+      hint: null,
+      choices: ["短い（みじかい）", "遅い（おそい）", "少ない（すくない）", "細い（ほそい）"],
+      answer: 1,
+      explanation: "「早い」の対義語は「遅い（おそい）」。「速い」も「遅い」と対義語になります。",
+      point: "早い・速い ↔ 遅い　／　長い ↔ 短い　／　多い ↔ 少ない"
+    },
+    {
+      id: 8, section: "語彙", jlpt: false,
+      text: "「疲れたので、少し（　）たいです。」\n（　）に入る言葉はどれですか。",
+      hint: "💡 疲れた後にしたいことを選んでください。",
+      choices: ["急ぎ（いそぎ）", "起き（おき）", "働き（はたらき）", "休み（やすみ）"],
+      answer: 3,
+      explanation: "「休む（やすむ）」＝to rest。「たい」の前は動詞の連用形（ます形のまず前）。",
+      point: "休みたい ／ 食べたい ／ 帰りたい"
+    },
+    {
+      id: 9, section: "スパイラル復習", jlpt: false,
+      text: "（Day1の復習）「歯を（　）から寝ます。」\n（　）に入る言葉はどれですか。",
+      hint: "💡 Day1で学習した「歯」と一緒に使う動詞を思い出しましょう。",
+      choices: ["浴びて（あびて）", "かけて", "磨いて（みがいて）", "洗って（あらって）"],
+      answer: 2,
+      explanation: "「歯を磨く（はをみがく）」はDay1で学習した固定表現。繰り返すことで定着します。",
+      point: "歯を磨く（はをみがく）← 固定表現として覚える"
+    }
+  ]
+};
+
+let current = 0, score = 0, answered = false, elapsed = 0;
+let timerInterval = null;
+let sectionScores = {}, totalBySection = {};
+let userAnswers = [];
+const labels = ["①", "②", "③", "④"];
+
+function startQuiz() {
+  current = 0; score = 0; answered = false; elapsed = 0;
+  sectionScores = {}; totalBySection = {}; userAnswers = [];
+  quizData.questions.forEach(q => {
+    if (!sectionScores[q.section]) { sectionScores[q.section] = 0; totalBySection[q.section] = 0; }
+    totalBySection[q.section]++;
+  });
+  document.getElementById('startScreen').classList.remove('active');
+  document.getElementById('quizScreen').classList.add('active');
+  document.getElementById('progressWrap').style.display = 'flex';
+  timerInterval = setInterval(() => {
+    elapsed++;
+    const m = Math.floor(elapsed / 60);
+    const s = elapsed % 60;
+    document.getElementById('timerDisplay').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+  }, 1000);
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = quizData.questions[current];
+  answered = false;
+  const pct = (current / quizData.questions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `${current + 1} / ${quizData.questions.length}`;
+  document.getElementById('questionArea').innerHTML = `
+    <div class="q-meta">
+      <span class="section-pill">${q.section}</span>
+      ${q.jlpt ? '<span class="jlpt-badge">★ JLPT形式</span>' : ''}
+      <span class="q-num">問${q.id}</span>
+    </div>
+    <div class="question-text">${q.text.replace(/\n/g,'<br>')}</div>
+    ${q.hint ? `<div class="hint-box">${q.hint}</div>` : ''}
+  `;
+  document.getElementById('choicesArea').innerHTML = q.choices.map((c, i) => `
+    <button class="choice-btn" id="choice-${i}" onclick="selectAnswer(${i})">
+      <span class="choice-label">${labels[i]}</span>
+      <span>${c}</span>
+    </button>
+  `).join('');
+  document.getElementById('explanation').className = 'explanation';
+  document.getElementById('nextBtn').style.display = 'none';
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = quizData.questions[current];
+  const correct = idx === q.answer;
+  userAnswers[current] = { chosen: idx, correct };
+  if (correct) { score++; sectionScores[q.section]++; }
+  q.choices.forEach((_, i) => {
+    const btn = document.getElementById(`choice-${i}`);
+    btn.classList.add('disabled');
+    if (i === q.answer) btn.classList.add('correct');
+    else if (i === idx && !correct) btn.classList.add('wrong');
+  });
+  const expEl = document.getElementById('explanation');
+  document.getElementById('expHeader').className = `exp-header ${correct ? 'correct-header' : 'wrong-header'}`;
+  document.getElementById('expHeader').innerHTML = correct ? '✓ 正解！' : `✗ 不正解　正解は ${labels[q.answer]}`;
+  document.getElementById('expBody').innerHTML = `${q.explanation}<div class="exp-point">📌 ${q.point}</div>`;
+  expEl.classList.add('show');
+  document.getElementById('nextBtn').style.display = 'block';
+  document.getElementById('nextBtn').textContent = current < quizData.questions.length - 1 ? '次の問題 →' : '結果を見る →';
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= quizData.questions.length) showResult();
+  else renderQuestion();
+}
+
+function showResult() {
+  clearInterval(timerInterval);
+  document.getElementById('quizScreen').classList.remove('active');
+  document.getElementById('resultScreen').classList.add('active');
+  document.getElementById('progressWrap').style.display = 'none';
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreDenom').textContent = `/ ${quizData.questions.length}問`;
+  const m = Math.floor(elapsed / 60), s = elapsed % 60;
+  document.getElementById('timeDisplay').textContent = `⏱ 学習時間：${m}分${s}秒`;
+  document.getElementById('sectionScores').innerHTML = Object.entries(sectionScores).map(([name, sc]) =>
+    `<div class="section-score-row"><div class="section-name">${name}</div><div class="section-frac">${sc} / ${totalBySection[name]}</div></div>`
+  ).join('');
+  const nums   = quizData.questions.map(q => `<td>問${q.id}</td>`).join('');
+  const chosen = userAnswers.map(a => `<td>${labels[a.chosen]}</td>`).join('');
+  const marks  = userAnswers.map(a => `<td class="${a.correct ? 'ar-ok' : 'ar-ng'}">${a.correct ? '○' : '✕'}</td>`).join('');
+  document.getElementById('answerReview').innerHTML = `
+    <div class="answer-review-title">📄 解答記録</div>
+    <table class="ar-table">
+      <tr><td>問題番号</td>${nums}</tr>
+      <tr><td>あなたの答え</td>${chosen}</tr>
+      <tr><td>正誤</td>${marks}</tr>
+    </table>
+  `;
+}
+
+function copyMemo() {
+  const memo = document.getElementById('outputMemo').value.trim() || '（未記入）';
+  const lines = quizData.questions.map((q, i) => {
+    const a = userAnswers[i];
+    return `問${q.id}：${labels[a.chosen]}　${a.correct ? '○' : '✕'}`;
+  }).join('\n');
+
+  const copyText =
+`【W1 Day2 アウトプットメモ】
+${memo}
+
+【解答記録】
+${lines}`;
+
+  const btn = document.getElementById('copyBtn');
+
+  function onSuccess() {
+    btn.textContent = '✓ コピーしました';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = '📋 メモ＋解答をコピーする';
+      btn.classList.remove('copied');
+    }, 2000);
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(copyText).then(onSuccess).catch(() => fallbackCopy(copyText, onSuccess));
+  } else {
+    fallbackCopy(copyText, onSuccess);
+  }
+}
+
+function fallbackCopy(text, callback) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.top = '0';
+  ta.style.left = '0';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try {
+    document.execCommand('copy');
+    callback();
+  } catch(e) {
+    alert('コピーできませんでした。テキストを長押しして手動でコピーしてください。');
+  }
+  document.body.removeChild(ta);
+}
+
+function restart() {
+  document.getElementById('resultScreen').classList.remove('active');
+  document.getElementById('startScreen').classList.add('active');
+}
+
+function closeApp() {
+  document.getElementById('resultScreen').classList.remove('active');
+  document.getElementById('doneScreen').classList.add('active');
+}
+</script>
+</body>
+</html>
